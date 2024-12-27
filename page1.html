@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base target="_top">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .btn-delete {
+    background-color: #f44336; /* Warna merah */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f; /* Warna merah lebih gelap saat hover */
+}
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    footer {
+      background-color: #f8f9fa;
+      padding: 10px;
+    }
+
+    footer .col {
+      text-align: center;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .btn-detail {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-tambah {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 5px;
+    }
+
+    .modal-body {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+    }
+
+        /* Modal styling */
+    .modal {
+        display: none; /* Modal is hidden by default */
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 8px;
+    }
+
+/* Gaya untuk tombol close */
+.close {
+    color: #f44336; /* Warna merah */
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #d32f2f; /* Warna merah lebih gelap saat hover */
+}
+
+/* Header dengan posisi relatif untuk referensi tombol close */
+.modal-header {
+    position: relative;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+    .modal-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .radio-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .radio-group input {
+        margin-right: 5px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid overflow-hidden">
+    <div class="row vh-100 overflow-auto">
+      <div class="col d-flex flex-column h-sm-100">
+        <main class="row overflow-auto">
+          <div class="col pt-4 min-vh-100">
+            <h1>KUESIONER FAKTOR-FAKTOR YANG MEMPENGARUHI KINERJA KARYAWAN SPBU</h1>
+
+            <!-- Tombol Tambah Data -->
+            <div class="action-buttons mb-3">
+<button class="btn btn-tambah" onclick="openTambahModal()">
+  <i class="fas fa-plus"></i>
+</button>
+            </div>
+
+            <table id="dataTable">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Tempat Kerja</th>
+                  <th>No HP</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data akan dimuat di sini -->
+              </tbody>
+            </table>
+          </div>
+        </main>
+        <footer class="row bg-light py-2 mt-auto">
+          <div class="col"></div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal untuk menampilkan detail -->
+<div id="dataModal" class="modal">
+    <div class="modal-content">
+        <!-- Header dengan tombol close -->
+        <div class="modal-header">
+            <h3 id="modalTitle">Detail Data Kuesioner</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Detail data akan ditampilkan di sini -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal untuk Tambah Data Diri -->
+<div id="tambahModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Tambah Data Kuesioner</h3>
+            <span class="close" onclick="closeTambahModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="tambahForm">
+                <!-- Nama -->
+                <div class="form-group">
+                    <label for="nama">Nama</label>
+                    <input type="text" id="nama" name="nama" class="form-input" required />
+                </div>
+
+                <!-- Tempat Kerja -->
+                <div class="form-group">
+                    <label for="tempatKerja">Tempat Kerja</label>
+                    <input type="text" id="tempatKerja" name="tempatKerja" class="form-input" required />
+                </div>
+
+                <!-- No HP -->
+                <div class="form-group">
+                    <label for="noHP">No HP</label>
+                    <input type="text" id="noHP" name="noHP" class="form-input" required />
+                </div>
+                <div class="form-group">
+                  <label>Saya merasa puas dengan gaji dan tunjangan yang saya terima</label>
+                  <div class="radio-group">
+                      <input type="radio" id="gajiTunjangan1" name="gajiTunjangan" value="1" required />
+                      <label for="gajiTunjangan1">1</label>
+                      <input type="radio" id="gajiTunjangan2" name="gajiTunjangan" value="2" />
+                      <label for="gajiTunjangan2">2</label>
+                      <input type="radio" id="gajiTunjangan3" name="gajiTunjangan" value="3" />
+                      <label for="gajiTunjangan3">3</label>
+                      <input type="radio" id="gajiTunjangan4" name="gajiTunjangan" value="4" />
+                      <label for="gajiTunjangan4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya merasa puas dengan kesempatan promosi di tempat kerja ini</label>
+                  <div class="radio-group">
+                      <input type="radio" id="kesempatanPromosi1" name="kesempatanPromosi" value="1" required />
+                      <label for="kesempatanPromosi1">1</label>
+                      <input type="radio" id="kesempatanPromosi2" name="kesempatanPromosi" value="2" />
+                      <label for="kesempatanPromosi2">2</label>
+                      <input type="radio" id="kesempatanPromosi3" name="kesempatanPromosi" value="3" />
+                      <label for="kesempatanPromosi3">3</label>
+                      <input type="radio" id="kesempatanPromosi4" name="kesempatanPromosi" value="4" />
+                      <label for="kesempatanPromosi4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya merasa dihargai atas kontribusi saya dalam pekerjaan</label>
+                  <div class="radio-group">
+                      <input type="radio" id="dihargaiKontribusi1" name="dihargaiKontribusi" value="1" required />
+                      <label for="dihargaiKontribusi1">1</label>
+                      <input type="radio" id="dihargaiKontribusi2" name="dihargaiKontribusi" value="2" />
+                      <label for="dihargaiKontribusi2">2</label>
+                      <input type="radio" id="dihargaiKontribusi3" name="dihargaiKontribusi" value="3" />
+                      <label for="dihargaiKontribusi3">3</label>
+                      <input type="radio" id="dihargaiKontribusi4" name="dihargaiKontribusi" value="4" />
+                      <label for="dihargaiKontribusi4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya puas dengan hubungan saya dengan rekan kerja</label>
+                  <div class="radio-group">
+                      <input type="radio" id="hubunganRekanKerja1" name="hubunganRekanKerja" value="1" required />
+                      <label for="hubunganRekanKerja1">1</label>
+                      <input type="radio" id="hubunganRekanKerja2" name="hubunganRekanKerja" value="2" />
+                      <label for="hubunganRekanKerja2">2</label>
+                      <input type="radio" id="hubunganRekanKerja3" name="hubunganRekanKerja" value="3" />
+                      <label for="hubunganRekanKerja3">3</label>
+                      <input type="radio" id="hubunganRekanKerja4" name="hubunganRekanKerja" value="4" />
+                      <label for="hubunganRekanKerja4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya puas dengan keadilan dalam pembagian tugas</label>
+                  <div class="radio-group">
+                      <input type="radio" id="keadilanPembagianTugas1" name="keadilanPembagianTugas" value="1" required />
+                      <label for="keadilanPembagianTugas1">1</label>
+                      <input type="radio" id="keadilanPembagianTugas2" name="keadilanPembagianTugas" value="2" />
+                      <label for="keadilanPembagianTugas2">2</label>
+                      <input type="radio" id="keadilanPembagianTugas3" name="keadilanPembagianTugas" value="3" />
+                      <label for="keadilanPembagianTugas3">3</label>
+                      <input type="radio" id="keadilanPembagianTugas4" name="keadilanPembagianTugas" value="4" />
+                      <label for="keadilanPembagianTugas4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya merasa pekerjaan saya memiliki nilai dan makna</label>
+                  <div class="radio-group">
+                      <input type="radio" id="pekerjaanNilaiMakna1" name="pekerjaanNilaiMakna" value="1" required />
+                      <label for="pekerjaanNilaiMakna1">1</label>
+                      <input type="radio" id="pekerjaanNilaiMakna2" name="pekerjaanNilaiMakna" value="2" />
+                      <label for="pekerjaanNilaiMakna2">2</label>
+                      <input type="radio" id="pekerjaanNilaiMakna3" name="pekerjaanNilaiMakna" value="3" />
+                      <label for="pekerjaanNilaiMakna3">3</label>
+                      <input type="radio" id="pekerjaanNilaiMakna4" name="pekerjaanNilaiMakna" value="4" />
+                      <label for="pekerjaanNilaiMakna4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya merasa puas dengan kebijakan yang diterapkan di tempat kerja</label>
+                  <div class="radio-group">
+                      <input type="radio" id="kebijakanTempatKerja1" name="kebijakanTempatKerja" value="1" required />
+                      <label for="kebijakanTempatKerja1">1</label>
+                      <input type="radio" id="kebijakanTempatKerja2" name="kebijakanTempatKerja" value="2" />
+                      <label for="kebijakanTempatKerja2">2</label>
+                      <input type="radio" id="kebijakanTempatKerja3" name="kebijakanTempatKerja" value="3" />
+                      <label for="kebijakanTempatKerja3">3</label>
+                      <input type="radio" id="kebijakanTempatKerja4" name="kebijakanTempatKerja" value="4" />
+                      <label for="kebijakanTempatKerja4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya puas dengan dukungan yang diberikan oleh atasan saya</label>
+                  <div class="radio-group">
+                      <input type="radio" id="dukunganAtasan1" name="dukunganAtasan" value="1" required />
+                      <label for="dukunganAtasan1">1</label>
+                      <input type="radio" id="dukunganAtasan2" name="dukunganAtasan" value="2" />
+                      <label for="dukunganAtasan2">2</label>
+                      <input type="radio" id="dukunganAtasan3" name="dukunganAtasan" value="3" />
+                      <label for="dukunganAtasan3">3</label>
+                      <input type="radio" id="dukunganAtasan4" name="dukunganAtasan" value="4" />
+                      <label for="dukunganAtasan4">4</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label>Saya merasa pekerjaan saya sesuai dengan kemampuan dan minat saya</label>
+                  <div class="radio-group">
+                      <input type="radio" id="pekerjaanKemampuanMinat1" name="pekerjaanKemampuanMinat" value="1" required />
+                      <label for="pekerjaanKemampuanMinat1">1</label>
+                      <input type="radio" id="pekerjaanKemampuanMinat2" name="pekerjaanKemampuanMinat" value="2" />
+                      <label for="pekerjaanKemampuanMinat2">2</label>
+                      <input type="radio" id="pekerjaanKemampuanMinat3" name="pekerjaanKemampuanMinat" value="3" />
+                      <label for="pekerjaanKemampuanMinat3">3</label>
+                      <input type="radio" id="pekerjaanKemampuanMinat4" name="pekerjaanKemampuanMinat" value="4" />
+                      <label for="pekerjaanKemampuanMinat4">4</label>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label>Saya merasa tempat kerja ini mendukung perkembangan karier saya</label>
+                <div class="radio-group">
+                    <input type="radio" id="perkembanganKarier1" name="perkembanganKarier" value="1" required />
+                    <label for="perkembanganKarier1">1</label>
+                    <input type="radio" id="perkembanganKarier2" name="perkembanganKarier" value="2" />
+                    <label for="perkembanganKarier2">2</label>
+                    <input type="radio" id="perkembanganKarier3" name="perkembanganKarier" value="3" />
+                    <label for="perkembanganKarier3">3</label>
+                    <input type="radio" id="perkembanganKarier4" name="perkembanganKarier" value="4" />
+                    <label for="perkembanganKarier4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Saya merasa organisasi ini memiliki visi dan misi yang jelas</label>
+                <div class="radio-group">
+                    <input type="radio" id="visiMisiOrganisasi1" name="visiMisiOrganisasi" value="1" required />
+                    <label for="visiMisiOrganisasi1">1</label>
+                    <input type="radio" id="visiMisiOrganisasi2" name="visiMisiOrganisasi" value="2" />
+                    <label for="visiMisiOrganisasi2">2</label>
+                    <input type="radio" id="visiMisiOrganisasi3" name="visiMisiOrganisasi" value="3" />
+                    <label for="visiMisiOrganisasi3">3</label>
+                    <input type="radio" id="visiMisiOrganisasi4" name="visiMisiOrganisasi" value="4" />
+                    <label for="visiMisiOrganisasi4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Saya merasa struktur organisasi mendukung kelancaran kerja</label>
+                <div class="radio-group">
+                    <input type="radio" id="strukturOrganisasi1" name="strukturOrganisasi" value="1" required />
+                    <label for="strukturOrganisasi1">1</label>
+                    <input type="radio" id="strukturOrganisasi2" name="strukturOrganisasi" value="2" />
+                    <label for="strukturOrganisasi2">2</label>
+                    <input type="radio" id="strukturOrganisasi3" name="strukturOrganisasi" value="3" />
+                    <label for="strukturOrganisasi3">3</label>
+                    <input type="radio" id="strukturOrganisasi4" name="strukturOrganisasi" value="4" />
+                    <label for="strukturOrganisasi4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Atasan saya memberikan arahan yang jelas terkait tugas-tugas saya</label>
+                <div class="radio-group">
+                    <input type="radio" id="arahanAtasan1" name="arahanAtasan" value="1" required />
+                    <label for="arahanAtasan1">1</label>
+                    <input type="radio" id="arahanAtasan2" name="arahanAtasan" value="2" />
+                    <label for="arahanAtasan2">2</label>
+                    <input type="radio" id="arahanAtasan3" name="arahanAtasan" value="3" />
+                    <label for="arahanAtasan3">3</label>
+                    <input type="radio" id="arahanAtasan4" name="arahanAtasan" value="4" />
+                    <label for="arahanAtasan4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Kebijakan organisasi mendukung kesejahteraan karyawan</label>
+                <div class="radio-group">
+                    <input type="radio" id="kebijakanKesejahteraan1" name="kebijakanKesejahteraan" value="1" required />
+                    <label for="kebijakanKesejahteraan1">1</label>
+                    <input type="radio" id="kebijakanKesejahteraan2" name="kebijakanKesejahteraan" value="2" />
+                    <label for="kebijakanKesejahteraan2">2</label>
+                    <input type="radio" id="kebijakanKesejahteraan3" name="kebijakanKesejahteraan" value="3" />
+                    <label for="kebijakanKesejahteraan3">3</label>
+                    <input type="radio" id="kebijakanKesejahteraan4" name="kebijakanKesejahteraan" value="4" />
+                    <label for="kebijakanKesejahteraan4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Organisasi menyediakan pelatihan untuk meningkatkan kemampuan saya</label>
+                <div class="radio-group">
+                    <input type="radio" id="pelatihanKemampuan1" name="pelatihanKemampuan" value="1" required />
+                    <label for="pelatihanKemampuan1">1</label>
+                    <input type="radio" id="pelatihanKemampuan2" name="pelatihanKemampuan" value="2" />
+                    <label for="pelatihanKemampuan2">2</label>
+                    <input type="radio" id="pelatihanKemampuan3" name="pelatihanKemampuan" value="3" />
+                    <label for="pelatihanKemampuan3">3</label>
+                    <input type="radio" id="pelatihanKemampuan4" name="pelatihanKemampuan" value="4" />
+                    <label for="pelatihanKemampuan4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Saya merasa budaya organisasi ini positif dan mendukung</label>
+                <div class="radio-group">
+                    <input type="radio" id="budayaOrganisasi1" name="budayaOrganisasi" value="1" required />
+                    <label for="budayaOrganisasi1">1</label>
+                    <input type="radio" id="budayaOrganisasi2" name="budayaOrganisasi" value="2" />
+                    <label for="budayaOrganisasi2">2</label>
+                    <input type="radio" id="budayaOrganisasi3" name="budayaOrganisasi" value="3" />
+                    <label for="budayaOrganisasi3">3</label>
+                    <input type="radio" id="budayaOrganisasi4" name="budayaOrganisasi" value="4" />
+                    <label for="budayaOrganisasi4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Komunikasi di dalam organisasi berlangsung secara efektif</label>
+                <div class="radio-group">
+                    <input type="radio" id="komunikasiOrganisasi1" name="komunikasiOrganisasi" value="1" required />
+                    <label for="komunikasiOrganisasi1">1</label>
+                    <input type="radio" id="komunikasiOrganisasi2" name="komunikasiOrganisasi" value="2" />
+                    <label for="komunikasiOrganisasi2">2</label>
+                    <input type="radio" id="komunikasiOrganisasi3" name="komunikasiOrganisasi" value="3" />
+                    <label for="komunikasiOrganisasi3">3</label>
+                    <input type="radio" id="komunikasiOrganisasi4" name="komunikasiOrganisasi" value="4" />
+                    <label for="komunikasiOrganisasi4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Saya merasa organisasi ini menghargai pendapat karyawannya</label>
+                <div class="radio-group">
+                    <input type="radio" id="menghargaiPendapat1" name="menghargaiPendapat" value="1" required />
+                    <label for="menghargaiPendapat1">1</label>
+                    <input type="radio" id="menghargaiPendapat2" name="menghargaiPendapat" value="2" />
+                    <label for="menghargaiPendapat2">2</label>
+                    <input type="radio" id="menghargaiPendapat3" name="menghargaiPendapat" value="3" />
+                    <label for="menghargaiPendapat3">3</label>
+                    <input type="radio" id="menghargaiPendapat4" name="menghargaiPendapat" value="4" />
+                    <label for="menghargaiPendapat4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Organisasi memberikan kesempatan yang adil untuk semua karyawan</label>
+                <div class="radio-group">
+                    <input type="radio" id="kesempatanAdil1" name="kesempatanAdil" value="1" required />
+                    <label for="kesempatanAdil1">1</label>
+                    <input type="radio" id="kesempatanAdil2" name="kesempatanAdil" value="2" />
+                    <label for="kesempatanAdil2">2</label>
+                    <input type="radio" id="kesempatanAdil3" name="kesempatanAdil" value="3" />
+                    <label for="kesempatanAdil3">3</label>
+                    <input type="radio" id="kesempatanAdil4" name="kesempatanAdil" value="4" />
+                    <label for="kesempatanAdil4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Saya merasa bangga menjadi bagian dari organisasi ini</label>
+                <div class="radio-group">
+                    <input type="radio" id="banggaOrganisasi1" name="banggaOrganisasi" value="1" required />
+                    <label for="banggaOrganisasi1">1</label>
+                    <input type="radio" id="banggaOrganisasi2" name="banggaOrganisasi" value="2" />
+                    <label for="banggaOrganisasi2">2</label>
+                    <input type="radio" id="banggaOrganisasi3" name="banggaOrganisasi" value="3" />
+                    <label for="banggaOrganisasi3">3</label>
+                    <input type="radio" id="banggaOrganisasi4" name="banggaOrganisasi" value="4" />
+                    <label for="banggaOrganisasi4">4</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label>Lingkungan kerja saya aman dan nyaman untuk bekerja</label>
+              <div class="radio-group">
+                  <input type="radio" id="lingkunganAmanNyaman1" name="lingkunganAmanNyaman" value="1" required />
+                  <label for="lingkunganAmanNyaman1">1</label>
+                  <input type="radio" id="lingkunganAmanNyaman2" name="lingkunganAmanNyaman" value="2" />
+                  <label for="lingkunganAmanNyaman2">2</label>
+                  <input type="radio" id="lingkunganAmanNyaman3" name="lingkunganAmanNyaman" value="3" />
+                  <label for="lingkunganAmanNyaman3">3</label>
+                  <input type="radio" id="lingkunganAmanNyaman4" name="lingkunganAmanNyaman" value="4" />
+                  <label for="lingkunganAmanNyaman4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Fasilitas kerja yang disediakan mendukung produktivitas saya</label>
+              <div class="radio-group">
+                  <input type="radio" id="fasilitasKerja1" name="fasilitasKerja" value="1" required />
+                  <label for="fasilitasKerja1">1</label>
+                  <input type="radio" id="fasilitasKerja2" name="fasilitasKerja" value="2" />
+                  <label for="fasilitasKerja2">2</label>
+                  <input type="radio" id="fasilitasKerja3" name="fasilitasKerja" value="3" />
+                  <label for="fasilitasKerja3">3</label>
+                  <input type="radio" id="fasilitasKerja4" name="fasilitasKerja" value="4" />
+                  <label for="fasilitasKerja4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Saya merasa puas dengan kebersihan tempat kerja</label>
+              <div class="radio-group">
+                  <input type="radio" id="kebersihanTempatKerja1" name="kebersihanTempatKerja" value="1" required />
+                  <label for="kebersihanTempatKerja1">1</label>
+                  <input type="radio" id="kebersihanTempatKerja2" name="kebersihanTempatKerja" value="2" />
+                  <label for="kebersihanTempatKerja2">2</label>
+                  <input type="radio" id="kebersihanTempatKerja3" name="kebersihanTempatKerja" value="3" />
+                  <label for="kebersihanTempatKerja3">3</label>
+                  <input type="radio" id="kebersihanTempatKerja4" name="kebersihanTempatKerja" value="4" />
+                  <label for="kebersihanTempatKerja4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Rekan kerja saya mendukung pekerjaan saya</label>
+              <div class="radio-group">
+                  <input type="radio" id="rekanKerjaMendukung1" name="rekanKerjaMendukung" value="1" required />
+                  <label for="rekanKerjaMendukung1">1</label>
+                  <input type="radio" id="rekanKerjaMendukung2" name="rekanKerjaMendukung" value="2" />
+                  <label for="rekanKerjaMendukung2">2</label>
+                  <input type="radio" id="rekanKerjaMendukung3" name="rekanKerjaMendukung" value="3" />
+                  <label for="rekanKerjaMendukung3">3</label>
+                  <input type="radio" id="rekanKerjaMendukung4" name="rekanKerjaMendukung" value="4" />
+                  <label for="rekanKerjaMendukung4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Saya merasa kondisi fisik tempat kerja mendukung fokus saya dalam bekerja</label>
+              <div class="radio-group">
+                  <input type="radio" id="kondisiFisikTempatKerja1" name="kondisiFisikTempatKerja" value="1" required />
+                  <label for="kondisiFisikTempatKerja1">1</label>
+                  <input type="radio" id="kondisiFisikTempatKerja2" name="kondisiFisikTempatKerja" value="2" />
+                  <label for="kondisiFisikTempatKerja2">2</label>
+                  <input type="radio" id="kondisiFisikTempatKerja3" name="kondisiFisikTempatKerja" value="3" />
+                  <label for="kondisiFisikTempatKerja3">3</label>
+                  <input type="radio" id="kondisiFisikTempatKerja4" name="kondisiFisikTempatKerja" value="4" />
+                  <label for="kondisiFisikTempatKerja4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Lingkungan kerja saya bebas dari gangguan yang menghambat pekerjaan</label>
+              <div class="radio-group">
+                  <input type="radio" id="lingkunganBebasGangguan1" name="lingkunganBebasGangguan" value="1" required />
+                  <label for="lingkunganBebasGangguan1">1</label>
+                  <input type="radio" id="lingkunganBebasGangguan2" name="lingkunganBebasGangguan" value="2" />
+                  <label for="lingkunganBebasGangguan2">2</label>
+                  <input type="radio" id="lingkunganBebasGangguan3" name="lingkunganBebasGangguan" value="3" />
+                  <label for="lingkunganBebasGangguan3">3</label>
+                  <input type="radio" id="lingkunganBebasGangguan4" name="lingkunganBebasGangguan" value="4" />
+                  <label for="lingkunganBebasGangguan4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Suasana kerja yang harmonis membuat saya lebih termotivasi</label>
+              <div class="radio-group">
+                  <input type="radio" id="suasanaKerjaHarmonis1" name="suasanaKerjaHarmonis" value="1" required />
+                  <label for="suasanaKerjaHarmonis1">1</label>
+                  <input type="radio" id="suasanaKerjaHarmonis2" name="suasanaKerjaHarmonis" value="2" />
+                  <label for="suasanaKerjaHarmonis2">2</label>
+                  <input type="radio" id="suasanaKerjaHarmonis3" name="suasanaKerjaHarmonis" value="3" />
+                  <label for="suasanaKerjaHarmonis3">3</label>
+                  <input type="radio" id="suasanaKerjaHarmonis4" name="suasanaKerjaHarmonis" value="4" />
+                  <label for="suasanaKerjaHarmonis4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Jadwal kerja saya tidak mengganggu keseimbangan hidup saya</label>
+              <div class="radio-group">
+                  <input type="radio" id="jadwalKerja1" name="jadwalKerja" value="1" required />
+                  <label for="jadwalKerja1">1</label>
+                  <input type="radio" id="jadwalKerja2" name="jadwalKerja" value="2" />
+                  <label for="jadwalKerja2">2</label>
+                  <input type="radio" id="jadwalKerja3" name="jadwalKerja" value="3" />
+                  <label for="jadwalKerja3">3</label>
+                  <input type="radio" id="jadwalKerja4" name="jadwalKerja" value="4" />
+                  <label for="jadwalKerja4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Saya merasa senang bekerja di lingkungan kerja ini</label>
+              <div class="radio-group">
+                  <input type="radio" id="senangBekerja1" name="senangBekerja" value="1" required />
+                  <label for="senangBekerja1">1</label>
+                  <input type="radio" id="senangBekerja2" name="senangBekerja" value="2" />
+                  <label for="senangBekerja2">2</label>
+                  <input type="radio" id="senangBekerja3" name="senangBekerja" value="3" />
+                  <label for="senangBekerja3">3</label>
+                  <input type="radio" id="senangBekerja4" name="senangBekerja" value="4" />
+                  <label for="senangBekerja4">4</label>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label>Atasan saya menciptakan lingkungan kerja yang kondusif</label>
+              <div class="radio-group">
+                  <input type="radio" id="lingkunganKondusifAtasan1" name="lingkunganKondusifAtasan" value="1" required />
+                  <label for="lingkunganKondusifAtasan1">1</label>
+                  <input type="radio" id="lingkunganKondusifAtasan2" name="lingkunganKondusifAtasan" value="2" />
+                  <label for="lingkunganKondusifAtasan2">2</label>
+                  <input type="radio" id="lingkunganKondusifAtasan3" name="lingkunganKondusifAtasan" value="3" />
+                  <label for="lingkunganKondusifAtasan3">3</label>
+                  <input type="radio" id="lingkunganKondusifAtasan4" name="lingkunganKondusifAtasan" value="4" />
+                  <label for="lingkunganKondusifAtasan4">4</label>
+              </div>
+          </div>
+          <div class="form-group">
+            <label>Saya mampu menyelesaikan tugas-tugas saya tepat waktu</label>
+            <div class="radio-group">
+                <input type="radio" id="tugasTepatWaktu1" name="tugasTepatWaktu" value="1" required />
+                <label for="tugasTepatWaktu1">1</label>
+                <input type="radio" id="tugasTepatWaktu2" name="tugasTepatWaktu" value="2" />
+                <label for="tugasTepatWaktu2">2</label>
+                <input type="radio" id="tugasTepatWaktu3" name="tugasTepatWaktu" value="3" />
+                <label for="tugasTepatWaktu3">3</label>
+                <input type="radio" id="tugasTepatWaktu4" name="tugasTepatWaktu" value="4" />
+                <label for="tugasTepatWaktu4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya selalu berusaha mencapai target yang telah ditentukan</label>
+            <div class="radio-group">
+                <input type="radio" id="targetDitetapkan1" name="targetDitetapkan" value="1" required />
+                <label for="targetDitetapkan1">1</label>
+                <input type="radio" id="targetDitetapkan2" name="targetDitetapkan" value="2" />
+                <label for="targetDitetapkan2">2</label>
+                <input type="radio" id="targetDitetapkan3" name="targetDitetapkan" value="3" />
+                <label for="targetDitetapkan3">3</label>
+                <input type="radio" id="targetDitetapkan4" name="targetDitetapkan" value="4" />
+                <label for="targetDitetapkan4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya bekerja dengan kualitas yang sesuai dengan standar organisasi</label>
+            <div class="radio-group">
+                <input type="radio" id="kualitasStandar1" name="kualitasStandar" value="1" required />
+                <label for="kualitasStandar1">1</label>
+                <input type="radio" id="kualitasStandar2" name="kualitasStandar" value="2" />
+                <label for="kualitasStandar2">2</label>
+                <input type="radio" id="kualitasStandar3" name="kualitasStandar" value="3" />
+                <label for="kualitasStandar3">3</label>
+                <input type="radio" id="kualitasStandar4" name="kualitasStandar" value="4" />
+                <label for="kualitasStandar4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya dapat bekerja di bawah tekanan tanpa mengurangi produktivitas</label>
+            <div class="radio-group">
+                <input type="radio" id="tekananTanpaProduktivitas1" name="tekananTanpaProduktivitas" value="1" required />
+                <label for="tekananTanpaProduktivitas1">1</label>
+                <input type="radio" id="tekananTanpaProduktivitas2" name="tekananTanpaProduktivitas" value="2" />
+                <label for="tekananTanpaProduktivitas2">2</label>
+                <input type="radio" id="tekananTanpaProduktivitas3" name="tekananTanpaProduktivitas" value="3" />
+                <label for="tekananTanpaProduktivitas3">3</label>
+                <input type="radio" id="tekananTanpaProduktivitas4" name="tekananTanpaProduktivitas" value="4" />
+                <label for="tekananTanpaProduktivitas4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya mampu bekerja secara mandiri maupun dalam tim</label>
+            <div class="radio-group">
+                <input type="radio" id="mandiriAtauTim1" name="mandiriAtauTim" value="1" required />
+                <label for="mandiriAtauTim1">1</label>
+                <input type="radio" id="mandiriAtauTim2" name="mandiriAtauTim" value="2" />
+                <label for="mandiriAtauTim2">2</label>
+                <input type="radio" id="mandiriAtauTim3" name="mandiriAtauTim" value="3" />
+                <label for="mandiriAtauTim3">3</label>
+                <input type="radio" id="mandiriAtauTim4" name="mandiriAtauTim" value="4" />
+                <label for="mandiriAtauTim4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya selalu menjaga kedisiplinan dalam bekerja</label>
+            <div class="radio-group">
+                <input type="radio" id="kedisiplinan1" name="kedisiplinan" value="1" required />
+                <label for="kedisiplinan1">1</label>
+                <input type="radio" id="kedisiplinan2" name="kedisiplinan" value="2" />
+                <label for="kedisiplinan2">2</label>
+                <input type="radio" id="kedisiplinan3" name="kedisiplinan" value="3" />
+                <label for="kedisiplinan3">3</label>
+                <input type="radio" id="kedisiplinan4" name="kedisiplinan" value="4" />
+                <label for="kedisiplinan4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya beradaptasi dengan cepat terhadap perubahan dalam pekerjaan</label>
+            <div class="radio-group">
+                <input type="radio" id="adaptasiPerubahan1" name="adaptasiPerubahan" value="1" required />
+                <label for="adaptasiPerubahan1">1</label>
+                <input type="radio" id="adaptasiPerubahan2" name="adaptasiPerubahan" value="2" />
+                <label for="adaptasiPerubahan2">2</label>
+                <input type="radio" id="adaptasiPerubahan3" name="adaptasiPerubahan" value="3" />
+                <label for="adaptasiPerubahan3">3</label>
+                <input type="radio" id="adaptasiPerubahan4" name="adaptasiPerubahan" value="4" />
+                <label for="adaptasiPerubahan4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya mampu memberikan pelayanan yang memuaskan kepada pelanggan</label>
+            <div class="radio-group">
+                <input type="radio" id="pelayananPelanggan1" name="pelayananPelanggan" value="1" required />
+                <label for="pelayananPelanggan1">1</label>
+                <input type="radio" id="pelayananPelanggan2" name="pelayananPelanggan" value="2" />
+                <label for="pelayananPelanggan2">2</label>
+                <input type="radio" id="pelayananPelanggan3" name="pelayananPelanggan" value="3" />
+                <label for="pelayananPelanggan3">3</label>
+                <input type="radio" id="pelayananPelanggan4" name="pelayananPelanggan" value="4" />
+                <label for="pelayananPelanggan4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya sering memberikan ide atau solusi untuk meningkatkan pekerjaan</label>
+            <div class="radio-group">
+                <input type="radio" id="ideSolusi1" name="ideSolusi" value="1" required />
+                <label for="ideSolusi1">1</label>
+                <input type="radio" id="ideSolusi2" name="ideSolusi" value="2" />
+                <label for="ideSolusi2">2</label>
+                <input type="radio" id="ideSolusi3" name="ideSolusi" value="3" />
+                <label for="ideSolusi3">3</label>
+                <input type="radio" id="ideSolusi4" name="ideSolusi" value="4" />
+                <label for="ideSolusi4">4</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Saya merasa hasil kerja saya dihargai oleh organisasi</label>
+            <div class="radio-group">
+                <input type="radio" id="hasilKerjaDihargai1" name="hasilKerjaDihargai" value="1" required />
+                <label for="hasilKerjaDihargai1">1</label>
+                <input type="radio" id="hasilKerjaDihargai2" name="hasilKerjaDihargai" value="2" />
+                <label for="hasilKerjaDihargai2">2</label>
+                <input type="radio" id="hasilKerjaDihargai3" name="hasilKerjaDihargai" value="3" />
+                <label for="hasilKerjaDihargai3">3</label>
+                <input type="radio" id="hasilKerjaDihargai4" name="hasilKerjaDihargai" value="4" />
+                <label for="hasilKerjaDihargai4">4</label>
+            </div>
+        </div>
+
+                <!-- Tombol Simpan Data -->
+                <button type="button" class="btn btn-tambah" onclick="simpanData()">Simpan Data</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+  <script>
+    // Fungsi untuk mengambil data dari Google Apps Script dan menampilkannya
+    function loadData() {
+      google.script.run.withSuccessHandler(displayData).readDataDiri();
+    }
+
+function displayData(data) {
+      const tableBody = document.querySelector('#dataTable tbody');
+      tableBody.innerHTML = ''; // Kosongkan tabel sebelum mengisi data baru
+      data.forEach(item => {
+        const itemStr = JSON.stringify(item).replace(/"/g, '&quot;'); // Escape tanda kutip
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.nama}</td>
+          <td>${item.tempatKerja}</td>
+          <td>${item.noHP}</td>
+          <td>
+<div class="action-buttons">
+  <button class="btn btn-detail" onclick="showDetail(${itemStr})">
+    <i class="fas fa-info-circle"></i>
+  </button>
+  <button class="btn btn-delete" onclick="deleteRow(this, '${item.noHP}')">
+    <i class="fas fa-trash-alt"></i>
+  </button>
+</div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+function deleteRow(button, noHP) {
+      // Menampilkan konfirmasi sebelum menghapus
+      const isConfirmed = confirm("Apakah Anda yakin ingin menghapus data ini?");
+      
+      if (isConfirmed) {
+        // Jika pengguna mengonfirmasi, lanjutkan untuk menghapus data
+        google.script.run.deleteDataDiri(noHP); // Mengirim noHP ke server untuk menghapus data
+        const row = button.closest('tr');
+        row.remove(); // Menghapus baris dari tampilan tabel
+      }
+    }
+
+    // Fungsi untuk menampilkan detail data dalam modal
+    function showDetail(item) {
+      let detailHTML = `<h3>Detail Data: ${item.nama}</h3>`;
+      detailHTML += `
+        <p><strong>Tempat Kerja:</strong> ${item.tempatKerja}</p>
+        <p><strong>No HP:</strong> ${item.noHP}</p>
+        <h4>Pertanyaan:</h4>
+        <ul>`;
+
+      // Menampilkan semua pertanyaan dan jawabannya
+      item.pertanyaan.forEach((jawaban, index) => {
+        detailHTML += `<li><strong>Pertanyaan ${index + 1}:</strong> ${jawaban}</li>`;
+      });
+      detailHTML += `</ul>`;
+
+      // Menampilkan detail dalam modal
+      document.getElementById('modalBody').innerHTML = detailHTML;
+      document.getElementById('dataModal').style.display = "block"; // Tampilkan modal
+    }
+
+    // Fungsi untuk menyimpan data baru
+function simpanData() {
+  const nama = document.getElementById('nama').value;
+  const tempatKerja = document.getElementById('tempatKerja').value;
+  const noHP = document.getElementById('noHP').value;
+
+  // Menangkap nilai dari pilihan skala untuk setiap pertanyaan
+  const gajiTunjangan = document.querySelector('input[name="gajiTunjangan"]:checked')?.value;
+  const kesempatanPromosi = document.querySelector('input[name="kesempatanPromosi"]:checked')?.value;
+  const dihargaiKontribusi = document.querySelector('input[name="dihargaiKontribusi"]:checked')?.value;
+  const hubunganRekanKerja = document.querySelector('input[name="hubunganRekanKerja"]:checked')?.value;
+  const keadilanPembagianTugas = document.querySelector('input[name="keadilanPembagianTugas"]:checked')?.value;
+  const pekerjaanNilaiMakna = document.querySelector('input[name="pekerjaanNilaiMakna"]:checked')?.value;
+  const kebijakanTempatKerja = document.querySelector('input[name="kebijakanTempatKerja"]:checked')?.value;
+  const dukunganAtasan = document.querySelector('input[name="dukunganAtasan"]:checked')?.value;
+  const pekerjaanKemampuanMinat = document.querySelector('input[name="pekerjaanKemampuanMinat"]:checked')?.value;
+  const perkembanganKarier = document.querySelector('input[name="perkembanganKarier"]:checked')?.value;
+  
+  const visiMisiOrganisasi = document.querySelector('input[name="visiMisiOrganisasi"]:checked')?.value;
+  const strukturOrganisasi = document.querySelector('input[name="strukturOrganisasi"]:checked')?.value;
+  const arahanAtasan = document.querySelector('input[name="arahanAtasan"]:checked')?.value;
+  const kebijakanKesejahteraan = document.querySelector('input[name="kebijakanKesejahteraan"]:checked')?.value;
+  const pelatihanKemampuan = document.querySelector('input[name="pelatihanKemampuan"]:checked')?.value;
+  const budayaOrganisasi = document.querySelector('input[name="budayaOrganisasi"]:checked')?.value;
+  const komunikasiOrganisasi = document.querySelector('input[name="komunikasiOrganisasi"]:checked')?.value;
+  const menghargaiPendapat = document.querySelector('input[name="menghargaiPendapat"]:checked')?.value;
+  const kesempatanAdil = document.querySelector('input[name="kesempatanAdil"]:checked')?.value;
+  const banggaOrganisasi = document.querySelector('input[name="banggaOrganisasi"]:checked')?.value;
+
+  const lingkunganAmanNyaman = document.querySelector('input[name="lingkunganAmanNyaman"]:checked')?.value;
+  const fasilitasKerja = document.querySelector('input[name="fasilitasKerja"]:checked')?.value;
+  const kebersihanTempatKerja = document.querySelector('input[name="kebersihanTempatKerja"]:checked')?.value;
+  const rekanKerjaMendukung = document.querySelector('input[name="rekanKerjaMendukung"]:checked')?.value;
+  const kondisiFisikTempatKerja = document.querySelector('input[name="kondisiFisikTempatKerja"]:checked')?.value;
+  const lingkunganBebasGangguan = document.querySelector('input[name="lingkunganBebasGangguan"]:checked')?.value;
+  const suasanaKerjaHarmonis = document.querySelector('input[name="suasanaKerjaHarmonis"]:checked')?.value;
+  const jadwalKerja = document.querySelector('input[name="jadwalKerja"]:checked')?.value;
+  const senangBekerja = document.querySelector('input[name="senangBekerja"]:checked')?.value;
+  const lingkunganKondusifAtasan = document.querySelector('input[name="lingkunganKondusifAtasan"]:checked')?.value;
+
+  const tugasTepatWaktu = document.querySelector('input[name="tugasTepatWaktu"]:checked')?.value;
+  const targetDitetapkan = document.querySelector('input[name="targetDitetapkan"]:checked')?.value;
+  const kualitasStandar = document.querySelector('input[name="kualitasStandar"]:checked')?.value;
+  const tekananTanpaProduktivitas = document.querySelector('input[name="tekananTanpaProduktivitas"]:checked')?.value;
+  const mandiriAtauTim = document.querySelector('input[name="mandiriAtauTim"]:checked')?.value;
+  const kedisiplinan = document.querySelector('input[name="kedisiplinan"]:checked')?.value;
+  const adaptasiPerubahan = document.querySelector('input[name="adaptasiPerubahan"]:checked')?.value;
+  const pelayananPelanggan = document.querySelector('input[name="pelayananPelanggan"]:checked')?.value;
+  const ideSolusi = document.querySelector('input[name="ideSolusi"]:checked')?.value;
+  const hasilKerjaDihargai = document.querySelector('input[name="hasilKerjaDihargai"]:checked')?.value;
+
+  // Validasi jika data belum lengkap
+  if (!nama || !tempatKerja || !noHP ) {
+    alert("Semua field harus diisi!");
+    return;
+  }
+
+  const data = {
+    nama,
+    tempatKerja,
+    noHP,
+    pertanyaan: [
+      { pertanyaan: 'Saya merasa puas dengan gaji dan tunjangan yang saya terima', jawaban: gajiTunjangan },
+      { pertanyaan: 'Saya merasa puas dengan kesempatan promosi di tempat kerja ini', jawaban: kesempatanPromosi },
+      { pertanyaan: 'Saya merasa dihargai atas kontribusi saya dalam pekerjaan', jawaban: dihargaiKontribusi },
+      { pertanyaan: 'Saya puas dengan hubungan saya dengan rekan kerja', jawaban: hubunganRekanKerja },
+      { pertanyaan: 'Saya puas dengan keadilan dalam pembagian tugas', jawaban: keadilanPembagianTugas },
+      { pertanyaan: 'Saya merasa pekerjaan saya memiliki nilai dan makna', jawaban: pekerjaanNilaiMakna },
+      { pertanyaan: 'Saya merasa puas dengan kebijakan yang diterapkan di tempat kerja', jawaban: kebijakanTempatKerja },
+      { pertanyaan: 'Saya puas dengan dukungan yang diberikan oleh atasan saya', jawaban: dukunganAtasan },
+      { pertanyaan: 'Saya merasa pekerjaan saya sesuai dengan kemampuan dan minat saya', jawaban: pekerjaanKemampuanMinat },
+      { pertanyaan: 'Saya merasa tempat kerja ini mendukung perkembangan karier saya', jawaban: perkembanganKarier },
+      { pertanyaan: 'Saya merasa organisasi ini memiliki visi dan misi yang jelas', jawaban: visiMisiOrganisasi },
+      { pertanyaan: 'Saya merasa struktur organisasi mendukung kelancaran kerja', jawaban: strukturOrganisasi },
+      { pertanyaan: 'Atasan saya memberikan arahan yang jelas terkait tugas-tugas saya', jawaban: arahanAtasan },
+      { pertanyaan: 'Kebijakan organisasi mendukung kesejahteraan karyawan', jawaban: kebijakanKesejahteraan },
+      { pertanyaan: 'Organisasi menyediakan pelatihan untuk meningkatkan kemampuan saya', jawaban: pelatihanKemampuan },
+      { pertanyaan: 'Saya merasa budaya organisasi ini positif dan mendukung', jawaban: budayaOrganisasi },
+      { pertanyaan: 'Komunikasi di dalam organisasi berlangsung secara efektif', jawaban: komunikasiOrganisasi },
+      { pertanyaan: 'Saya merasa organisasi ini menghargai pendapat karyawannya', jawaban: menghargaiPendapat },
+      { pertanyaan: 'Organisasi memberikan kesempatan yang adil untuk semua karyawan', jawaban: kesempatanAdil },
+      { pertanyaan: 'Saya merasa bangga menjadi bagian dari organisasi ini', jawaban: banggaOrganisasi },
+      { pertanyaan: 'Lingkungan kerja saya aman dan nyaman untuk bekerja', jawaban: lingkunganAmanNyaman },
+      { pertanyaan: 'Fasilitas kerja yang disediakan mendukung produktivitas saya', jawaban: fasilitasKerja },
+      { pertanyaan: 'Saya merasa puas dengan kebersihan tempat kerja', jawaban: kebersihanTempatKerja },
+      { pertanyaan: 'Rekan kerja saya mendukung pekerjaan saya', jawaban: rekanKerjaMendukung },
+      { pertanyaan: 'Saya merasa kondisi fisik tempat kerja mendukung fokus saya dalam bekerja', jawaban: kondisiFisikTempatKerja },
+      { pertanyaan: 'Lingkungan kerja saya bebas dari gangguan yang menghambat pekerjaan', jawaban: lingkunganBebasGangguan },
+      { pertanyaan: 'Suasana kerja yang harmonis membuat saya lebih termotivasi', jawaban: suasanaKerjaHarmonis },
+      { pertanyaan: 'Jadwal kerja saya tidak mengganggu keseimbangan hidup saya', jawaban: jadwalKerja },
+      { pertanyaan: 'Saya merasa senang bekerja di lingkungan kerja ini', jawaban: senangBekerja },
+      { pertanyaan: 'Atasan saya menciptakan lingkungan kerja yang kondusif', jawaban: lingkunganKondusifAtasan },
+      { pertanyaan: 'Saya mampu menyelesaikan tugas-tugas saya tepat waktu', jawaban: tugasTepatWaktu },
+      { pertanyaan: 'Saya selalu berusaha mencapai target yang telah ditentukan', jawaban: targetDitetapkan },
+      { pertanyaan: 'Saya bekerja dengan kualitas yang sesuai dengan standar organisasi', jawaban: kualitasStandar },
+      { pertanyaan: 'Saya dapat bekerja di bawah tekanan tanpa mengurangi produktivitas', jawaban: tekananTanpaProduktivitas },
+      { pertanyaan: 'Saya mampu bekerja secara mandiri maupun dalam tim', jawaban: mandiriAtauTim },
+      { pertanyaan: 'Saya selalu menjaga kedisiplinan dalam bekerja', jawaban: kedisiplinan },
+      { pertanyaan: 'Saya beradaptasi dengan cepat terhadap perubahan dalam pekerjaan', jawaban: adaptasiPerubahan },
+      { pertanyaan: 'Saya mampu memberikan pelayanan yang memuaskan kepada pelanggan', jawaban: pelayananPelanggan },
+      { pertanyaan: 'Saya sering memberikan ide atau solusi untuk meningkatkan pekerjaan', jawaban: ideSolusi },
+      { pertanyaan: 'Saya merasa hasil kerja saya dihargai oleh organisasi', jawaban: hasilKerjaDihargai }
+    ]
+  };
+
+  // Kirim data ke Google Apps Script untuk disimpan
+  google.script.run.withSuccessHandler(function() {
+    alert('Data berhasil disimpan!');
+    closeTambahModal(); // Menutup modal setelah berhasil disimpan
+    loadData(); // Memuat ulang data setelah penyimpanan
+  }).simpanDataDiri(data);
+}
+
+    // Fungsi untuk menutup modal
+    function closeTambahModal() {
+      document.getElementById('tambahModal').style.display = "none";
+    }
+
+    // Fungsi untuk menutup modal
+    function closeModal() {
+      document.getElementById('dataModal').style.display = "none";
+    }
+
+    // Fungsi untuk membuka modal tambah data
+    function openTambahModal() {
+      document.getElementById('tambahModal').style.display = "block";
+    }
+
+    // Fungsi untuk mengedit data (contoh)
+    function editData(nama) {
+      alert('Mengedit data untuk: ' + nama);
+    }
+
+    // Memanggil fungsi loadData setelah halaman dimuat
+    window.onload = loadData;
+  </script>
+</body>
+
+</html>
